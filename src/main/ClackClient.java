@@ -1,6 +1,7 @@
 package main;
 
 import data.ClackData;
+import data.MessageClackData;
 
 public class ClackClient {
     String userName;
@@ -10,23 +11,23 @@ public class ClackClient {
     ClackData dataToSendToServer;
     ClackData dataToReceiveFromServer;
 
-    ClackClient(String userName, String hostName, int port) {
+    public ClackClient(String userName, String hostName, int port) {
         this.userName = userName;
         this.hostName = hostName;
         this.port = port;
     }
 
-    ClackClient(String userName, String hostName) {
+    public ClackClient(String userName, String hostName) {
         this.userName = userName;
         this.hostName = hostName;
     }
 
-    ClackClient(String userName) {
+    public ClackClient(String userName) {
         this.userName = userName;
     }
 
-    ClackClient() {
-
+    public ClackClient() {
+        //Should call another ctor.. but what ctor
     }
 
     public void start() {
@@ -59,15 +60,17 @@ public class ClackClient {
     }
     @Override
     public boolean equals(Object o) {
-        if (o == this) {
-            return true;
+        if (o instanceof ClackClient) {
+            ClackClient input = (ClackClient) o;
+            if (this.userName == input.userName && this.hostName == input.hostName && this.port == input.port) {
+                return true;
+            }
         }
-        else {
-            return false;
-        }
+        return false;
     }
     @Override
     public String toString() {
-        return null;
+        String s = "Username: " + this.userName + " HostName: " + this.hostName + " Port: " + this.port;
+        return s;
     }
 }

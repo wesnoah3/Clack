@@ -1,6 +1,7 @@
 package main;
 
 import data.ClackData;
+import data.MessageClackData;
 
 public class ClackServer {
 
@@ -10,10 +11,10 @@ public class ClackServer {
     ClackData dataToReceiveFromClient;
     ClackData dataToSendToClient;
 
-    ClackServer(int port) {
+    public ClackServer(int port) {
         this.port = port;
     }
-    ClackServer() {
+    public ClackServer() {
         this.port = defaultPort;
     }
 
@@ -36,13 +37,17 @@ public class ClackServer {
     }
     @Override
     public boolean equals(Object o) {
-        if (o == this) {
-            return true;
+        if (o instanceof ClackServer) {
+            ClackServer input = (ClackServer) o;
+            if (this.port == input.port) {
+                return true;
+            }
         }
         return false;
     }
     @Override
     public String toString() {
-        return null;
+        String s = "Port: " + this.port + " ConnectionClosed: " + this.closeConnection;
+        return s;
     }
 }

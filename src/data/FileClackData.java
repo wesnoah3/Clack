@@ -4,12 +4,12 @@ public class FileClackData extends ClackData {
 
     String fileName;
     String fileContents;
-    FileClackData(String userName, String fileName, int type) {
+    public FileClackData(String userName, String fileName, int type) {
         super(userName, type);
         this.fileContents = null;
     }
 
-    FileClackData() {
+    public FileClackData() {
         super();
     }
 
@@ -17,10 +17,10 @@ public class FileClackData extends ClackData {
         this.fileName = fileName;
     }
     public String getFileName() {
-        return fileName;
+        return this.fileName;
     }
     public String getData() {
-        return fileContents;
+        return this.fileContents;
     }
     public void readFileContents() {
 
@@ -34,15 +34,17 @@ public class FileClackData extends ClackData {
     }
     @Override
     public boolean equals(Object o) {
-        if (o == this) {
-            return true;
+        if (o instanceof FileClackData) {
+            FileClackData input = (FileClackData) o;
+            if (this.username == input.username && this.type == input.type && this.fileName == input.fileName && this.fileContents == input.fileContents) {
+                return true;
+            }
         }
-        else {
-            return false;
-        }
+        return false;
     }
     @Override
     public String toString() {
-        return null;
+        String s = "Username: " + this.username + " Type: " + this.type + " FileName: " + this.fileName + " FileContents: " + this.fileContents;
+        return s;
     }
 }
