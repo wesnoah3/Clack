@@ -6,23 +6,29 @@ import data.MessageClackData;
 public class TestClackData {
 
     public boolean testClackData() {
-
         boolean failed = false;
 
-        MessageClackData mcd = new MessageClackData("test1", "This is a test", 1);
-        FileClackData fcd = new FileClackData("test2", "testfile", 2);
+        //Test all functions within ClackData
 
-        if (mcd.getUserName() != "test1") {
-            failed = true;
-        }
-        else if (mcd.getData() != "This is a test") {
-            failed = true;
-        }
-        else if (mcd.getType() != 1) {
-            failed = true;
-        }
+        final String username1 = "test1";
+        final String username2 = "test2";
+        final String msg1 = "This is a test";
+        final int port1 = 1;
+        final int port2 = 2;
+        final String file1 = "testFile";
 
-        //else if (fcd.getFileName() != )
+        MessageClackData mcd = new MessageClackData(username1, msg1, port1);
+        FileClackData fcd = new FileClackData(username2, file1, port2);
+
+        if (mcd.getUserName() != username1) {
+            failed = true;
+        }
+        else if (mcd.getData() != msg1) {
+            failed = true;
+        }
+        else if (mcd.getType() != port1) {
+            failed = true;
+        }
 
 
 
