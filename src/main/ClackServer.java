@@ -3,6 +3,9 @@ package main;
 import data.ClackData;
 import data.MessageClackData;
 
+/**
+ * Class to store and maintain all relevant ClackServer data.
+ */
 public class ClackServer {
 
     final int defaultPort = 7000;
@@ -10,45 +13,47 @@ public class ClackServer {
     boolean closeConnection;
     ClackData dataToReceiveFromClient;
     ClackData dataToSendToClient;
-    /*
-     * Ctor accepting port
-     * @param port
+    /**
+     * Ctor accepting port.
+     * @param port User's port.
      */
     public ClackServer(int port) {
         this.port = port;
     }
-    /*
-     * Default ctor
+    /**
+     * Default ctor.
      */
     public ClackServer() {
         this.port = defaultPort;
     }
-    /*
-     * Method to start ClackServer
+    /**
+     * Method to start ClackServer, WIP
      */
     public void start() {
 
     }
-    /*
-     * Method to receive data
+    /**
+     * Method to receive data, WIP
      */
     public void receiveData() {
 
     }
-    /*
-     * Method to send data
+    /**
+     * Method to send data, WIP
      */
     public void sendData() {
 
     }
-    /*
-     * Method to return port
+    /**
+     * Gets port.
+     * @return port integer.
      */
     public int getPort() {
         return this.port;
     }
-    /*
-     * Returns unique hashcode of object
+    /**
+     * Generates unique hashcode of object.
+     * @return hashCode integer.
      */
     @Override
     public int hashCode() {
@@ -57,9 +62,9 @@ public class ClackServer {
         }
         return this.port;
     }
-    /*
-     * Takes object, returns true if its equal to this
-     * @param ClackServer object
+    /**
+     * Takes object, returns true if its equal to this.
+     * @param o Passed object to compare to.
      */
     @Override
     public boolean equals(Object o) {
@@ -71,8 +76,9 @@ public class ClackServer {
         }
         return false;
     }
-    /*
-     * Returns toStringed message including all object data
+    /**
+     * Genereates toStringed message including all object data.
+     * @return toString String.
      */
     @Override
     public String toString() {

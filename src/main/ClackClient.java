@@ -3,6 +3,9 @@ package main;
 import data.ClackData;
 import data.MessageClackData;
 
+/**
+ * Class to store and maintain all relevant ClackClient data.
+ */
 public class ClackClient {
     String userName;
     String hostName;
@@ -10,97 +13,101 @@ public class ClackClient {
     boolean closeConnection;
     ClackData dataToSendToServer;
     ClackData dataToReceiveFromServer;
-    /*
-     * Ctor accepting userName, hostName, and port
-     * @param userName
-     * @param hostName
-     * @param port
+    /**
+     * Ctor accepting userName, hostName, and port.
+     * @param userName User's userName.
+     * @param hostName User's hostName.
+     * @param port User's port.
      */
     public ClackClient(String userName, String hostName, int port) {
         this.userName = userName;
         this.hostName = hostName;
         this.port = port;
     }
-    /*
-     * Ctor accepting userName and hostName
-     * @param userName
-     * @param hostName
+    /**
+     * Ctor accepting userName and hostName.
+     * @param userName User's userName.
+     * @param hostName User's hostName.
      */
     public ClackClient(String userName, String hostName) {
         this.userName = userName;
         this.hostName = hostName;
     }
-    /*
-     * Ctor accepting userName
-     * @param userName
+    /**
+     * Ctor accepting userName.
+     * @param userName User's userName.
      */
     public ClackClient(String userName) {
         this.userName = userName;
     }
-    /*
-     * Default ctor
+    /**
+     * Default ctor.
      */
     public ClackClient() {
         //Should call another ctor.. but what ctor
     }
-    /*
-     * Method to start ClackClient
+    /**
+     * Method to start ClackClient, WIP
      */
     public void start() {
 
     }
-    /*
-     * Method to read client data
+    /**
+     * Method to read client data, WIP
      */
     public void readClientData() {
 
     }
-    /*
-     * Method to send data
+    /**
+     * Method to send data, WIP
      */
     public void sendData() {
 
     }
-    /*
-     * Method to receive data
+    /**
+     * Method to receive data, WIP
      */
     public void receiveData() {
 
     }
-    /*
-     * Method to print data
+    /**
+     * Method to print data, WIP
      */
     public void printData() {
 
     }
-    /*
-     * Returns username
+    /**
+     * Gets userName.
+     * @return userName.
      */
     public String getUserName() {
         return this.userName;
     }
-    /*
-     * Returns hostname
+    /**
+     * Gets hostName.
+     * @return hostName.
      */
     public String getHostName() {
         return this.hostName;
     }
-    /*
-     * Returns port
+    /**
+     * Gets port.
+     * @return port integer.
      */
     public int getPort() {
         return this.port;
     }
-    /*
-     * Returns unique hashcode of object
+    /**
+     * Generates unique hashcode of object
+     * @return hashCode integer.
      */
     @Override
     public int hashCode() {
         return this.userName.hashCode() + this.hostName.hashCode() + this.port;
     }
-    /*
-     * Takes object, returns true if its equal to this
-     * @param ClackClient object
+    /**
+     * Takes object, returns true if its equal to this.
+     * @param o Passed object to compare to.
      */
     @Override
     public boolean equals(Object o) {
@@ -112,8 +119,9 @@ public class ClackClient {
         }
         return false;
     }
-    /*
-     * Returns toStringed message including all object data
+    /**
+     * Generates toStringed message including all object data
+     * @return toString String.
      */
     @Override
     public String toString() {

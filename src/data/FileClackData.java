@@ -1,66 +1,71 @@
 package data;
 
+/**
+ * Class building off ClackData to store basic user variables and manage their files.
+ */
 public class FileClackData extends ClackData {
 
     String fileName;
     String fileContents;
-    /*
-     * Ctor accepting userName, fileName, and type
-     * @param userName
-     * @param fileName
-     * @param type
+    /**
+     * Ctor accepting userName, fileName, and type.
+     * @param userName User's userName.
+     * @param fileName User's fileName.
+     * @param type User's type.
      */
     public FileClackData(String userName, String fileName, int type) {
         super(userName, type);
         this.fileContents = null;
     }
-    /*
-     * Default ctor
+    /**
+     * Default ctor.
      */
     public FileClackData() {
         super();
     }
-    /*
-     * Sets fileName to passed fileName
-     * @param fielName
+    /**
+     * Sets fileName to passed fileName.
+     * @param fileName User's new fileName.
      */
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
-    /*
-     * Returns fileName String
+    /**
+     * Gets fileName String.
+     * @return fileName String.
      */
     public String getFileName() {
         return this.fileName;
     }
-    /*
-     * Returns fileContents String
+    /**
+     * Gets fileContents String.
+     * @return fileContents String
      */
     public String getData() {
         return this.fileContents;
     }
-    /*
-     * Reads file contents
+    /**
+     * Reads file contents.
      */
     public void readFileContents() {
 
     }
-    /*
-     * Writes file content
+    /**
+     * Writes file contents.
      */
     public void writeFileContents() {
 
     }
-    /*
-     * Returns unique hashCode of object using fileName and fileContents
+    /**
+     * Returns unique hashCode of object using fileName and fileContents.
      */
     @Override
     public int hashCode() {
         return this.fileName.hashCode() + this.fileContents.hashCode();
     }
-    /*
-     * Takes object, returns true if its equal to this
-     * @param FileClackData object
+    /**
+     * Takes object, returns true if its equal to this.
+     * @param o Passed object to compare.
      */
     @Override
     public boolean equals(Object o) {
@@ -72,8 +77,9 @@ public class FileClackData extends ClackData {
         }
         return false;
     }
-    /*
-     * Returns toStringed message including all object data
+    /**
+     * Generate message including all object data
+     * @return Message String
      */
     @Override
     public String toString() {

@@ -1,40 +1,45 @@
 package data;
 
+/**
+ * Class building off ClackData to store basic user variable and manager their new messages.
+ */
 public class MessageClackData extends ClackData {
 
     String message;
-    /*
-     * Ctor for MessageClackData taking username, message, and type
-     * @param userName
-     * @param message
-     * @param type
+    /**
+     * Ctor for MessageClackData taking username, message, and type.
+     * @param userName User's userName.
+     * @param message User's message.
+     * @param type User's type.
      */
     public MessageClackData(String userName, String message, int type) {
         super(userName, type);
         this.message = message;
     }
-    /*
-     * Default ctor for MesageClackData
+    /**
+     * Default ctor.
      */
     public MessageClackData() {
         super();
     }
-    /*
-     * Returns message
+    /**
+     * Gets message.
+     * @return Stored message.
      */
     public String getData() {
         return this.message;
     }
-    /*
-     * Returns hashCode of object
+    /**
+     * Generated hashCode for object.
+     * @return hashcode Integer.
      */
     @Override
     public int hashCode() {
         return this.message.hashCode();
     }
-    /*
+    /**
      * Takes object, returns true if its equal to this
-     * @param MessageClackData object
+     * @param o Passed object to compare to.
      */
     @Override
     public boolean equals(Object o) {
@@ -46,8 +51,9 @@ public class MessageClackData extends ClackData {
         }
         return false;
     }
-    /*
-     * Returns toStringed message including all object data
+    /**
+     * Generates toStringed message including all object data.
+     * @return toString String.
      */
     @Override
     public String toString() {
