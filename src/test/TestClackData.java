@@ -16,10 +16,12 @@ public class TestClackData {
 
         final String username1 = "test1";
         final String username2 = "test2";
+        final String fileName = "file1";
         final String msg1 = "This is a test";
         final int port1 = 1;
         final int port2 = 2;
         final String file1 = "testFile";
+        final String fileContents = "asdfghjkl";
 //        final Date day = Date.;
         final int code = 12345;
 
@@ -47,11 +49,27 @@ public class TestClackData {
         else if (mcd.toString() != username1){
             failed = true;
         }
-//        else if (){
-//            failed = true;
+//        else if(fcd.setFileName(fileName) != ){
+//
 //        }
+        else if (fcd.getFileName() != fileName){
+            failed = true;
+        }
+        else if (fcd.getData() != fileContents){
+            failed = true;
+        }
 
+        //Still need to test FileClackData methods:  read and writeFileContents (They just return Void so ave to decide how to test)
 
+        else if (fcd.hashCode() != code){
+            failed = true;
+        }
+        else if(equals(msg1) != true){
+            failed = true;
+        }
+        else if(fcd.toString() != username1) {
+            failed = true;
+        }
 
         return failed;
     }
