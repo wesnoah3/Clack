@@ -15,4 +15,7 @@ public class TestClackClient {
 
         return failed;
     }
+    public static void main(String args){
+
+    }
 }

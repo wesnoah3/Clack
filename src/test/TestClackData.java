@@ -3,8 +3,12 @@ package test;
 import data.FileClackData;
 import data.MessageClackData;
 
-public class TestClackData {
+import java.text.DateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 
+public class TestClackData {
+    //This file should test all MessageClackdata and FileClackData methods
     public boolean testClackData() {
         boolean failed = false;
 
@@ -16,6 +20,8 @@ public class TestClackData {
         final int port1 = 1;
         final int port2 = 2;
         final String file1 = "testFile";
+//        final Date day = Date.;
+        final int code = 12345;
 
         MessageClackData mcd = new MessageClackData(username1, msg1, port1);
         FileClackData fcd = new FileClackData(username2, file1, port2);
@@ -29,7 +35,21 @@ public class TestClackData {
         else if (mcd.getType() != port1) {
             failed = true;
         }
-
+//        else if (mcd.getDate() != day){
+//
+//        }
+        else if (mcd.hashCode() != code){
+            failed = true;
+        }
+        else if (mcd.equals(msg1) != true){
+            failed = true;
+        }
+        else if (mcd.toString() != username1){
+            failed = true;
+        }
+//        else if (){
+//            failed = true;
+//        }
 
 
 
