@@ -23,6 +23,8 @@ public class ClackClient {
         this.userName = userName;
         this.hostName = hostName;
         this.port = port;
+        this.dataToReceiveFromServer = null;
+        this.dataToSendToServer = null;
     }
     /**
      * Ctor accepting userName and hostName.
@@ -32,6 +34,8 @@ public class ClackClient {
     public ClackClient(String userName, String hostName) {
         this.userName = userName;
         this.hostName = hostName;
+        this.dataToReceiveFromServer = null;
+        this.dataToSendToServer = null;
     }
     /**
      * Ctor accepting userName.
@@ -39,12 +43,16 @@ public class ClackClient {
      */
     public ClackClient(String userName) {
         this.userName = userName;
+        this.dataToReceiveFromServer = null;
+        this.dataToSendToServer = null;
     }
     /**
      * Default ctor.
      */
     public ClackClient() {
-        //Should call another ctor.. but what ctor
+        super();
+        this.dataToReceiveFromServer = null;
+        this.dataToSendToServer = null;
     }
     /**
      * Method to start ClackClient, WIP

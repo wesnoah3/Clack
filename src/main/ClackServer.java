@@ -19,6 +19,8 @@ public class ClackServer {
      */
     public ClackServer(int port) {
         this.port = port;
+        this.dataToReceiveFromClient = null;
+        this.dataToSendToClient = null;
     }
     /**
      * Default ctor.
