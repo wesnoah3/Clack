@@ -6,7 +6,21 @@ import java.util.Objects;
  */
 public class MessageClackData extends ClackData {
 
-    String message;
+    private String message;  // A string representing instant message
+
+    /**
+     * The constructor to set up the instance variables username, message, and type.
+     * Crypts and sets message with given key.
+     * @param userName User's userName.
+     * @param message User's message.
+     * @param key User's key.
+     * @param type User's type.
+     */
+    public MessageClackData(String userName, String message, String key, int type) {
+        super(userName, type);
+        this.message = encrypt(message, key);
+    }
+
     /**
      * Ctor for MessageClackData taking username, message, and type.
      * @param userName User's userName.
@@ -23,6 +37,15 @@ public class MessageClackData extends ClackData {
     public MessageClackData() {
         super(ClackData.CONSTANT_SENDMESSAGE);
         this.message = "";
+    }
+
+    /**
+     * Decrypts and returns message with given key.
+     * @param key
+     * @return Decrypted message.
+     */
+    public String getData(String key) {
+        return decrypt(this.message, key);
     }
     /**
      * Gets message.
@@ -48,6 +71,7 @@ public class MessageClackData extends ClackData {
     /**
      * Takes object, returns true if its equal to this
      * @param o Passed object to compare to.
+     * @return Boolean representing whether the objects are equal.
      */
     @Override
     public boolean equals(Object o) {

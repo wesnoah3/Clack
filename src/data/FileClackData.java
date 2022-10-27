@@ -1,13 +1,18 @@
 package data;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 /**
  * Class building off ClackData to store basic user variables and manage their files.
  */
 public class FileClackData extends ClackData {
 
-    String fileName;
-    String fileContents;
+    private String fileName;  // A string representing the name of a file
+    private String fileContents;  // A string representing the contents of a file
     /**
      * Ctor accepting userName, fileName, and type.
      * @param userName User's userName.
@@ -41,6 +46,16 @@ public class FileClackData extends ClackData {
     public String getFileName() {
         return this.fileName;
     }
+
+    /**
+     * Decrypts and returns fileContents with given key.
+     * @param key
+     * @return Decrypted file contents
+     */
+    public String getData(String key) {
+        return decrypt(this.fileContents, key);
+    }
+
     /**
      * Gets fileContents String.
      * @return fileContents String
@@ -48,17 +63,80 @@ public class FileClackData extends ClackData {
     public String getData() {
         return this.fileContents;
     }
+
+    /**
+     * Reads file contents after decrypting with given key.
+     * @param key
+     * @throws IOException
+     */
+    public void readFileContents(String key) throws IOException {
+        List<String> contents = new ArrayList<String>();
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(new File(this.fileName)));
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                contents.add(line);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            br.close();
+        }
+
+        for (String s : contents) {
+            fileContents += encrypt(s, key);
+        }
+    }
+
     /**
      * Reads file contents.
+     * @throws IOException
      */
-    public void readFileContents() {
-
+    public void readFileContents() throws IOException {
+        List<String> contents = new ArrayList<String>();
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(new File(this.fileName)));
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                contents.add(line);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            br.close();
+        }
     }
+
+    /**
+     * Writes fileContents after decrypting with given key.
+     * @param key
+     */
+    public void writeFileContents(String key) {
+        try {
+            FileWriter fw = new FileWriter(this.fileName);
+            String decrypted = decrypt(this.fileContents, key);
+            fw.write(decrypted);
+            fw.close();
+        } catch (IOException e) {
+            System.err.println("Error occurred writing encrypted data to file.");
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Writes file contents.
      */
     public void writeFileContents() {
-
+        try {
+            FileWriter fw = new FileWriter(this.fileName);
+            fw.write(this.fileContents);
+            fw.close();
+        } catch (IOException e) {
+            System.err.println("Error occurred writing data to file.");
+            e.printStackTrace();
+        }
     }
     /**
      * Returns unique hashCode of object using fileName and fileContents.
