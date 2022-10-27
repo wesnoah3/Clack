@@ -1,12 +1,14 @@
 package main;
 
 import data.ClackData;
+import java.util.Objects;
 import data.MessageClackData;
 
 /**
  * Class to store and maintain all relevant ClackClient data.
  */
 public class ClackClient {
+    private static final int DEFAULT_PORT = 7000;
     String userName;
     String hostName;
     int port;
@@ -23,6 +25,7 @@ public class ClackClient {
         this.userName = userName;
         this.hostName = hostName;
         this.port = port;
+        this.closeConnection = false;
         this.dataToReceiveFromServer = null;
         this.dataToSendToServer = null;
     }
@@ -32,27 +35,20 @@ public class ClackClient {
      * @param hostName User's hostName.
      */
     public ClackClient(String userName, String hostName) {
-        this.userName = userName;
-        this.hostName = hostName;
-        this.dataToReceiveFromServer = null;
-        this.dataToSendToServer = null;
+        this(userName, hostName, DEFAULT_PORT);
     }
     /**
      * Ctor accepting userName.
      * @param userName User's userName.
      */
     public ClackClient(String userName) {
-        this.userName = userName;
-        this.dataToReceiveFromServer = null;
-        this.dataToSendToServer = null;
+        this(userName, "localhost");
     }
     /**
      * Default ctor.
      */
     public ClackClient() {
-        super();
-        this.dataToReceiveFromServer = null;
-        this.dataToSendToServer = null;
+        this("Anon");
     }
     /**
      * Method to start ClackClient, WIP
@@ -111,7 +107,16 @@ public class ClackClient {
      */
     @Override
     public int hashCode() {
-        return this.userName.hashCode() + this.hostName.hashCode() + this.port;
+        int result = 23;
+
+        result = 31 * result + Objects.hashCode(this.userName);
+        result = 31 * result + Objects.hashCode(this.hostName);
+        result = 31 * result + this.port;
+        result = 31 * result + Objects.hashCode(this.closeConnection);
+        result = 31 * result + Objects.hashCode(this.dataToSendToServer);
+        result = 31 * result + Objects.hashCode(this.dataToReceiveFromServer);
+
+        return result;
     }
     /**
      * Takes object, returns true if its equal to this.
@@ -119,13 +124,21 @@ public class ClackClient {
      */
     @Override
     public boolean equals(Object o) {
-        if (o instanceof ClackClient) {
-            ClackClient input = (ClackClient) o;
-            if (this.userName == input.userName && this.hostName == input.hostName && this.port == input.port) {
-                return true;
-            }
+        if (this == o) {
+            return true;
         }
-        return false;
+        if (!(o instanceof ClackClient)) {
+            return false;
+        }
+
+        ClackClient otherClackClient = (ClackClient) o;
+
+        return this.userName.equals(otherClackClient.userName) &&
+                this.hostName.equals(otherClackClient.hostName) &&
+                this.port == otherClackClient.port &&
+                this.closeConnection == otherClackClient.closeConnection &&
+                Objects.equals(this.dataToSendToServer, otherClackClient.dataToSendToServer) &&
+                Objects.equals(this.dataToReceiveFromServer, otherClackClient.dataToReceiveFromServer);
     }
     /**
      * Generates toStringed message including all object data
@@ -133,7 +146,12 @@ public class ClackClient {
      */
     @Override
     public String toString() {
-        String s = "Username: " + this.userName + " HostName: " + this.hostName + " Port: " + this.port;
-        return s;
+        return "This instance of ClackClient has the following properties:\n"
+                + "Username: " + this.userName + "\n"
+                + "Host name: " + this.hostName + "\n"
+                + "Port number: " + this.port + "\n"
+                + "Connection status: " + (this.closeConnection ? "Closed" : "Open") + "\n"
+                + "Data to send to the server: " + this.dataToSendToServer + "\n"
+                + "Data to receive from the server: " + this.dataToReceiveFromServer + "\n";
     }
 }

@@ -1,5 +1,6 @@
 package data;
 
+import java.util.Objects;
 /**
  * Class building off ClackData to store basic user variables and manage their files.
  */
@@ -15,13 +16,16 @@ public class FileClackData extends ClackData {
      */
     public FileClackData(String userName, String fileName, int type) {
         super(userName, type);
+        this.fileName = fileName;
         this.fileContents = null;
     }
     /**
      * Default ctor.
      */
     public FileClackData() {
-        super();
+        super(ClackData.CONSTANT_SENDFILE);
+        this.fileName = "";
+        this.fileContents = null;
     }
     /**
      * Sets fileName to passed fileName.
@@ -61,7 +65,7 @@ public class FileClackData extends ClackData {
      */
     @Override
     public int hashCode() {
-        return this.fileName.hashCode() + this.fileContents.hashCode();
+        return Objects.hash(this.username, this.type, this.fileName, this.fileContents);
     }
     /**
      * Takes object, returns true if its equal to this.
@@ -69,13 +73,19 @@ public class FileClackData extends ClackData {
      */
     @Override
     public boolean equals(Object o) {
-        if (o instanceof FileClackData) {
-            FileClackData input = (FileClackData) o;
-            if (this.username == input.username && this.type == input.type && this.fileName == input.fileName && this.fileContents == input.fileContents) {
-                return true;
-            }
+        if (this == o) {
+            return true;
         }
-        return false;
+        if (!(o instanceof FileClackData)) {
+            return false;
+        }
+
+        FileClackData otherFileClackData = (FileClackData) o;
+
+        return this.username.equals(otherFileClackData.username)
+                && this.type == otherFileClackData.type
+                && Objects.equals(this.fileName, otherFileClackData.fileName)
+                && Objects.equals(this.fileContents, otherFileClackData.fileContents);
     }
     /**
      * Generate message including all object data
@@ -83,7 +93,11 @@ public class FileClackData extends ClackData {
      */
     @Override
     public String toString() {
-        String s = "Username: " + this.username + " Type: " + this.type + " FileName: " + this.fileName + " FileContents: " + this.fileContents;
-        return s;
+        return "This instance of FileClackData has the following properties:\n"
+                + "Username: " + this.username + "\n"
+                + "Type: " + this.type + "\n"
+                + "Date: " + this.date.toString() + "\n"
+                + "File Name: " + this.fileName + "\n"
+                + "File Contents: " + this.fileContents + "\n";
     }
 }

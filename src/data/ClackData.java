@@ -6,6 +6,25 @@ import java.util.Date;
  */
 public abstract class ClackData {
 
+    /**
+     * For giving a listing of all users connected to this session.
+     */
+    public static final int CONSTANT_LISTUSERS = 0;
+
+    /**
+     * For logging out, i.e., close this client's connection.
+     */
+    public static final int CONSTANT_LOGOUT = 1;
+
+    /**
+     * For sending a message.
+     */
+    public static final int CONSTANT_SENDMESSAGE = 2;
+
+    /**
+     * For sending a file.
+     */
+    public static final int CONSTANT_SENDFILE = 3;
     String username;
     int type;
     Date date;
@@ -24,12 +43,13 @@ public abstract class ClackData {
      * @param type User's type.
      */
     ClackData(int type) { //For "Anon" User
+        this("Anon", type);
     }
     /**
      * Default ctor.
      */
     ClackData() {
-
+        this(CONSTANT_LOGOUT);
     }
     /**
      * Gets type int.

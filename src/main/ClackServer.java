@@ -1,6 +1,7 @@
 package main;
 
 import data.ClackData;
+import java.util.Objects;
 import data.MessageClackData;
 
 /**
@@ -8,17 +9,18 @@ import data.MessageClackData;
  */
 public class ClackServer {
 
-    final int defaultPort = 7000;
-    int port;
-    boolean closeConnection;
-    ClackData dataToReceiveFromClient;
-    ClackData dataToSendToClient;
+    private static final int DEFAULT_PORT = 7000;
+    private int port;
+    private boolean closeConnection;
+    private ClackData dataToReceiveFromClient;
+    private ClackData dataToSendToClient;
     /**
      * Ctor accepting port.
      * @param port User's port.
      */
     public ClackServer(int port) {
         this.port = port;
+        this.closeConnection = false;
         this.dataToReceiveFromClient = null;
         this.dataToSendToClient = null;
     }
@@ -26,7 +28,7 @@ public class ClackServer {
      * Default ctor.
      */
     public ClackServer() {
-        this.port = defaultPort;
+        this(DEFAULT_PORT);
     }
     /**
      * Method to start ClackServer, WIP
@@ -59,10 +61,7 @@ public class ClackServer {
      */
     @Override
     public int hashCode() {
-        if (closeConnection) {
-            return this.port + 1;
-        }
-        return this.port;
+        return Objects.hash(this.port, this.closeConnection, this.dataToReceiveFromClient, this.dataToSendToClient);
     }
     /**
      * Takes object, returns true if its equal to this.
@@ -70,13 +69,19 @@ public class ClackServer {
      */
     @Override
     public boolean equals(Object o) {
-        if (o instanceof ClackServer) {
-            ClackServer input = (ClackServer) o;
-            if (this.port == input.port) {
-                return true;
-            }
+        if (this == o) {
+            return true;
         }
-        return false;
+        if (!(o instanceof ClackServer)) {
+            return false;
+        }
+
+        ClackServer otherClackServer = (ClackServer) o;
+
+        return this.port == otherClackServer.port
+                && this.closeConnection == otherClackServer.closeConnection
+                && Objects.equals(this.dataToReceiveFromClient, otherClackServer.dataToReceiveFromClient)
+                && Objects.equals(this.dataToSendToClient, otherClackServer.dataToSendToClient);
     }
     /**
      * Genereates toStringed message including all object data.
@@ -84,7 +89,10 @@ public class ClackServer {
      */
     @Override
     public String toString() {
-        String s = "Port: " + this.port + " ConnectionClosed: " + this.closeConnection;
-        return s;
+        return "This instance of ClackServer has the following properties:\n"
+                + "Port number: " + this.port + "\n"
+                + "Connection status: " + (this.closeConnection ? "Closed" : "Open") + "\n"
+                + "Data to receive from the client: " + this.dataToReceiveFromClient + "\n"
+                + "Data to send to the client: " + this.dataToSendToClient + "\n";
     }
 }
