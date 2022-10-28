@@ -122,9 +122,8 @@ public abstract class ClackData {
         if (Character.isUpperCase(inputChar)) {
             capitalize = true;
         }
-        final char new_char = encrypt ? intToChar(findSmallest(charToInt(inputChar) + charToInt(keyChar) - 1))
-                : intToChar(findSmallest(charToInt(inputChar) - charToInt(keyChar) + 1));
-        return capitalize ? Character.toUpperCase(new_char) : new_char;
+        final char newChar = encrypt ? intToChar(findSmallest(charToInt(inputChar) + charToInt(keyChar) - 1))  : intToChar(findSmallest(charToInt(inputChar) - charToInt(keyChar) + 1));
+        return capitalize ? Character.toUpperCase(newChar) : newChar;
     }
 
     private static char intToChar(int i) {
