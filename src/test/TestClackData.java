@@ -4,123 +4,63 @@ import data.ClackData;
 import data.FileClackData;
 import data.MessageClackData;
 
-import java.text.DateFormat;
-import java.time.LocalDate;
-import java.util.Date;
+import java.io.IOException;
 
 public class TestClackData {
-    //This file should test all MessageClackdata and FileClackData methods
+    //This file should test all MessageClackData and FileClackData methods
     public static void main(String[] args) {
-        // MessageClackData (all constructors)
-        MessageClackData messageClackData1 = new MessageClackData();
-        MessageClackData messageClackData2 =
-                new MessageClackData("testUser1", "testMessage", ClackData.CONSTANT_SENDMESSAGE);
-        MessageClackData messageClackData3 = new MessageClackData("testUser3", "HelloWorld", "SecretKey", 400);
+        //Testing FileClackData
+        ClackData cd1 = new FileClackData("Test1", "C:\\Users\\wesba\\Desktop\\CS242-Clack\\test1.txt", 0);
+        try {
+            ((FileClackData) cd1).readFileContents();
+        } catch (IOException ioe) {
+            System.out.println(ioe);
+        }
 
-        // FileClackData (both constructors)
-        FileClackData fileClackData1 = new FileClackData();
-        FileClackData fileClackData2 =
-                new FileClackData("testUser2", "filename0", ClackData.CONSTANT_SENDFILE);
+        ClackData fcd1 = new FileClackData("Test2", "C:\\Users\\wesba\\Desktop\\CS242-Clack\\test2.txt", 0);
 
-        // getType()
-        System.out.println("messageClackData1 getType(): " + messageClackData1.getType());
-        System.out.println("messageClackData2 getType(): " + messageClackData2.getType());
-        System.out.println("messageClackData3 getType(): " + messageClackData3.getType());
-        System.out.println("fileClackData1 getType(): " + fileClackData1.getType());
-        System.out.println("fileClackData2 getType(): " + fileClackData2.getType());
-        System.out.println();
+        ((FileClackData) fcd1).writeFileContents();
 
-        // getUserName()
-        System.out.println("messageClackData1 getUserName(): " + messageClackData1.getUserName());
-        System.out.println("messageClackData2 getUserName(): " + messageClackData2.getUserName());
-        System.out.println("messageClackData3 getUserName(): " + messageClackData3.getUserName());
-        System.out.println("fileClackData1 getUserName(): " + fileClackData1.getUserName());
-        System.out.println("fileClackData2 getUserName(): " + fileClackData2.getUserName());
-        System.out.println();
+        System.out.println(cd1.getType());
+        System.out.println(cd1.getUserName());
+        System.out.println(cd1.getDate());
+        System.out.println(cd1.getData());
+        System.out.println(cd1.toString());
+        System.out.println(cd1.hashCode());
+        System.out.println("");
 
-        // getDate()
-        System.out.println("messageClackData1 getDate(): " + messageClackData1.getDate());
-        System.out.println("messageClackData2 getDate(): " + messageClackData2.getDate());
-        System.out.println("messageClackData3 getDate(): " + messageClackData3.getDate());
-        System.out.println("fileClackData1 getDate(): " + fileClackData1.getDate());
-        System.out.println("fileClackData2 getDate(): " + fileClackData2.getDate());
-        System.out.println();
+        System.out.println(fcd1.toString());
 
-        // getData()
-        System.out.println("messageClackData1 getData(): " + messageClackData1.getData());
-        System.out.println("messageClackData2 getData(): " + messageClackData2.getData());
-        System.out.println("messageClackData3 getData(): " + messageClackData3.getData());
-        System.out.println("fileClackData1 getData(): " + fileClackData1.getData());
-        System.out.println("fileClackData2 getData(): " + fileClackData2.getData());
-        System.out.println();
+        System.out.println("ClackData Testing #2:");
+        ClackData cd2 = new FileClackData();
+        System.out.println(cd2.getType());
+        System.out.println(cd2.getUserName());
+        System.out.println(cd2.getDate());
+        System.out.println(cd2.getData());
+        System.out.println(cd2.toString());
+        System.out.println(cd2.equals(cd1));
+        System.out.println(cd2.hashCode());
+        System.out.println("");
 
-        // hashCode()
-        System.out.println("messageClackData1 hashCode(): " + messageClackData1.hashCode());
-        System.out.println("messageClackData2 hashCode(): " + messageClackData2.hashCode());
-        System.out.println("messageClackData3 hashCode(): " + messageClackData3.hashCode());
-        System.out.println("fileClackData1 hashCode(): " + fileClackData1.hashCode());
-        System.out.println("fileClackData2 hashCode(): " + fileClackData2.hashCode());
-        System.out.println();
+        System.out.println("ClackData Testing #3:");
+        ClackData cd3 = new MessageClackData("Test3", "Secret Message", 0);
+        System.out.println(cd3.getType());
+        System.out.println(cd3.getUserName());
+        System.out.println(cd3.getDate());
+        System.out.println(cd3.getData());
+        System.out.println(cd3.toString());
+        System.out.println(cd3.hashCode());
+        System.out.println("");
 
-        // equals()
-        System.out.println("messageClackData1 equals null: "
-                + messageClackData1.equals(null));
-        System.out.println("messageClackData1 equals messageClackData1: "
-                + messageClackData1.equals(messageClackData1));
-        System.out.println("messageClackData1 equals messageClackData2: "
-                + messageClackData1.equals(messageClackData2));
-        System.out.println("messageClackData2 equals messageClackData1: "
-                + messageClackData2.equals(messageClackData1));
-        System.out.println("messageClackData3 equals messageClackData1: "
-                + messageClackData3.equals(messageClackData1));
-        System.out.println("messageClackData1 equals fileClackData1: "
-                + messageClackData1.equals(fileClackData1));
-        System.out.println("fileClackData1 equals null: "
-                + fileClackData1.equals(null));
-        System.out.println("fileClackData1 equals fileClackData1: "
-                + fileClackData1.equals(fileClackData1));
-        System.out.println("fileClackData1 equals fileClackData2: "
-                + fileClackData1.equals(fileClackData2));
-        System.out.println("fileClackData2 equals fileClackData1: "
-                + fileClackData2.equals(fileClackData1));
-        System.out.println("fileClackData1 equals messageClackData1: "
-                + fileClackData1.equals(messageClackData1));
-        System.out.println();
-
-        // toString()
-        System.out.println("messageClackData1:\n" + messageClackData1);
-        System.out.println("messageClackData2:\n" + messageClackData2);
-        System.out.println("messageClackData3:\n" + messageClackData3);
-        System.out.println("fileClackData1:\n" + fileClackData1);
-        System.out.println("fileClackData2:\n" + fileClackData2);
-        System.out.println();
-
-        // getFileName
-        System.out.println("fileClackData1 getFileName(): " + fileClackData1.getFileName());
-        System.out.println("fileClackData2 getFileName(): " + fileClackData2.getFileName());
-        System.out.println();
-
-        // setFileName
-        String filename1 = "filename1";
-        System.out.println("Sets the filename of fileClackData1 to be " + filename1);
-        fileClackData1.setFileName(filename1);
-        System.out.println("fileClackData1 getFileName(): " + fileClackData1.getFileName());
-        System.out.println("fileClackData1 hashCode(): " + fileClackData1.hashCode());
-        System.out.println("fileClackData1 equals fileClackData1: " + fileClackData1.equals(fileClackData1));
-        System.out.println("fileClackData1 equals fileClackData2: " + fileClackData1.equals(fileClackData2));
-        System.out.println("fileClackData1:\n" + fileClackData1);
-        System.out.println();
-
-        String filename2 = "filename2";
-        System.out.println("Sets the filename of fileClackData2 to be " + filename2);
-        fileClackData2.setFileName(filename2);
-        System.out.println("fileClackData2 getFileName(): " + fileClackData2.getFileName());
-        System.out.println("fileClackData2 hashCode(): " + fileClackData2.hashCode());
-        System.out.println("fileClackData2 equals fileClackData2: " + fileClackData2.equals(fileClackData2));
-        System.out.println("fileClackData2 equals fileClackData1: " + fileClackData2.equals(fileClackData1));
-        System.out.println("fileClackData2:\n" + fileClackData2);
-
-        // decrypt
-        System.out.println("messageClackData3 decrypted message: " + messageClackData3.getData("SecretKey"));
+        System.out.println("ClackData Testing #4:");
+        ClackData cd4 = new MessageClackData();
+        System.out.println(cd4.getType());
+        System.out.println(cd4.getUserName());
+        System.out.println(cd4.getDate());
+        System.out.println(cd4.getData());
+        System.out.println(cd4.toString());
+        System.out.println(cd4.equals(cd3));
+        System.out.println(cd4.hashCode());
+        System.out.println("");
     }
 }

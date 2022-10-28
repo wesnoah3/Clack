@@ -68,24 +68,24 @@ public abstract class ClackData {
      * @return
      */
     protected String encrypt(String inputStringToEncrypt, String key) {
-        StringBuffer sb = new StringBuffer(inputStringToEncrypt);
-        for (int i = 0; i < inputStringToEncrypt.length(); i++) {
-            if (Character.isLowerCase(inputStringToEncrypt.charAt(i))) {
-                sb.setCharAt(i, Character.toUpperCase(inputStringToEncrypt.charAt(i)));
+        String encryptedStr = "";
+        int index = 0;
+        for (char ch : inputStringToEncrypt.toCharArray()) {
+            Boolean flag = false;
+            if (Character.isLetter(ch)) {
+                flag = true;
+                encryptedStr+= handleCaps(ch, key.charAt(index), true);
+            } else {
+                encryptedStr += ch;
+            }
+            if (flag) {
+                if (index == key.length() - 1) {
+                    index = 0;
+                } else {
+                    index++;
+                }
             }
         }
-        inputStringToEncrypt = sb.toString();
-
-        String encryptedStr = "";
-
-        for (int i = 0; i < inputStringToEncrypt.length(); i++) {
-            int x = (inputStringToEncrypt.charAt(i) + key.charAt(i)) %26;
-
-            x += 'A';
-
-            encryptedStr += (char)(x);
-        }
-
         return encryptedStr;
     }
 
@@ -96,24 +96,53 @@ public abstract class ClackData {
      * @return
      */
     protected String decrypt(String inputStringToDecrypt, String key) {
-        StringBuffer sb = new StringBuffer(inputStringToDecrypt);
-        for (int i = 0; i < inputStringToDecrypt.length(); i++) {
-            if (Character.isLowerCase(inputStringToDecrypt.charAt(i))) {
-                sb.setCharAt(i, Character.toUpperCase(inputStringToDecrypt.charAt(i)));
+        String decryptedStr = "";
+        int index = 0;
+        for (char ch : inputStringToDecrypt.toCharArray()) {
+            Boolean flag = false;
+            if (Character.isLetter(ch)) {
+                flag = true;
+                decryptedStr += handleCaps(ch, key.charAt(index), false);
+            } else {
+                decryptedStr += ch;
+            }
+            if (flag) {
+                if (index == key.length() - 1) {
+                    index = 0;
+                } else {
+                    index++;
+                }
             }
         }
-        inputStringToDecrypt = sb.toString();
-
-        String decryptedStr = "";
-
-        for (int i = 0; i < inputStringToDecrypt.length() && i < key.length(); i++) {
-            int x = (inputStringToDecrypt.charAt(i) - key.charAt(i) + 26) %26;
-
-            x += 'A';
-            decryptedStr += (char)(x);
-        }
-
         return decryptedStr;
+    }
+
+    private static char handleCaps(char inputChar, char keyChar, Boolean encrypt) {
+        Boolean capitalize = false;
+        if (Character.isUpperCase(inputChar)) {
+            capitalize = true;
+        }
+        final char new_char = encrypt ? intToChar(findSmallest(charToInt(inputChar) + charToInt(keyChar) - 1))
+                : intToChar(findSmallest(charToInt(inputChar) - charToInt(keyChar) + 1));
+        return capitalize ? Character.toUpperCase(new_char) : new_char;
+    }
+
+    private static char intToChar(int i) {
+        return (char) (i + 96);
+    }
+
+    private static int charToInt(char ch) {
+        return (int) Character.toLowerCase(ch) - 96;
+    }
+
+    private static int findSmallest(int i) {
+        while (i < 0)
+            i += 26;
+        while (i > 26)
+            i -= 26;
+        if (i == 0)
+            i = 26;
+        return i;
     }
 
 

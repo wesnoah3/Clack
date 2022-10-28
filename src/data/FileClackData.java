@@ -1,7 +1,5 @@
 package data;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,7 +133,8 @@ public class FileClackData extends ClackData {
             fw.close();
         } catch (IOException e) {
             System.err.println("Error occurred writing data to file.");
-            e.printStackTrace();
+        } catch (NullPointerException n) {
+            System.err.println("Null pointer");
         }
     }
     /**

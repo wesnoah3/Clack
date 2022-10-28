@@ -1,6 +1,8 @@
 package main;
 
 import data.ClackData;
+
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -74,9 +76,9 @@ public class ClackClient {
      */
     public void start() {
         this.inFromStd = new Scanner(System.in);
-        if (closeConnection == false) {
-            this.dataToReceiveFromServer = this.dataToSendToServer;
+        while (!this.closeConnection) {
             readClientData();
+            this.dataToReceiveFromServer = this.dataToSendToServer;
             printData();
         }
     }
@@ -91,7 +93,12 @@ public class ClackClient {
         else if (str.contains("SENDFILE")) {
             str.substring(str.indexOf("SENDFILE") + 3, str.length());
             this.dataToSendToServer = new FileClackData(this.userName, str, ClackData.CONSTANT_SENDFILE);
-            //READ FILE
+            try {
+                ((FileClackData) this.dataToSendToServer).readFileContents();
+            } catch (IOException e) {
+                System.err.println("Error occurred reading file contents with SENDFILE");
+                e.printStackTrace();
+            }
         }
         else if (str == "LISTUSERS") {
 
