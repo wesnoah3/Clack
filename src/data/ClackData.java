@@ -1,10 +1,11 @@
 package data;
 
 import java.util.Date;
+import java.io.Serializable;
 /**
  * Abstract class to build FileClackData and MessageClackData off of.
  */
-public abstract class ClackData {
+public abstract class ClackData implements Serializable {
 
     /**
      * For giving a listing of all users connected to this session.

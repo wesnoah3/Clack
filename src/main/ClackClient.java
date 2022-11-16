@@ -3,6 +3,11 @@ package main;
 import data.ClackData;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.NoRouteToHostException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -13,15 +18,46 @@ import data.MessageClackData;
  * Class to store and maintain all relevant ClackClient data.
  */
 public class ClackClient {
-    private static final int DEFAULT_PORT = 7000;  // The default port number
-
-    private String userName;  // A string representing the name of the client
-    private String hostName;  // A string representing the name of the computer representing the server
-    private int port; // An integer representing the port number on the server connected to
-    private boolean closeConnection; // A boolean representing whether the connection is closed or not
-    private ClackData dataToSendToServer; // A ClackData object representing the data sent to the server
-    private ClackData dataToReceiveFromServer; // A ClackData object representing the data received from the server
-    private Scanner inFromStd; // A Scanner for receiving data from System.in.
+    /**
+     * Default port
+     */
+    private static final int DEFAULT_PORT = 7000;
+    /**
+     * String to represent name of the client.
+     */
+    private String userName;
+    /**
+     * String to represent name of computer representing the server.
+     */
+    private String hostName;
+    /**
+     * Integer representing port number.
+     */
+    private int port;
+    /**
+     * Boolean representing whether connection is closed or not.
+     */
+    private boolean closeConnection;
+    /**
+     * ClackData object representing the data sent to the server.
+     */
+    private ClackData dataToSendToServer;
+    /**
+     * ClackData object representing the data received from the server.
+     */
+    private ClackData dataToReceiveFromServer;
+    /**
+     * Scanner object to get input from user.
+     */
+    private Scanner inFromStd;
+    /**
+     * Input stream to receive data packets from the server.
+     */
+    private ObjectInputStream inFromServer = null;
+    /**
+     * Output stream to send data packets to the server.
+     */
+    private ObjectOutputStream outToServer = null;
     /**
      * Ctor accepting userName, hostName, and port.
      * @param userName User's userName.
@@ -75,11 +111,22 @@ public class ClackClient {
      * Method to start ClackClient and print data if connection hasn't closed.
      */
     public void start() {
-        this.inFromStd = new Scanner(System.in);
-        while (!this.closeConnection) {
-            readClientData();
-            this.dataToReceiveFromServer = this.dataToSendToServer;
-            printData();
+        try {
+            Socket socket = new Socket(hostName, port);
+            inFromServer = new ObjectInputStream(socket.getInputStream());
+            outToServer = new ObjectOutputStream(socket.getOutputStream());
+            this.inFromStd = new Scanner(System.in);
+            while (!this.closeConnection) {
+                readClientData();
+                this.dataToReceiveFromServer = this.dataToSendToServer;
+                printData();
+                this.readClientData();
+                this.sendData();
+            }
+            inFromStd.close();
+            socket.close();
+        } catch (IOException ioe) {
+            System.err.println(("IOException occurred"));
         }
     }
     /**
@@ -108,16 +155,34 @@ public class ClackClient {
         }
     }
     /**
-     * Method to send data, WIP
+     * Method to send data to server.
      */
     public void sendData() {
-
+        try {
+            outToServer.writeObject(dataToSendToServer);
+        } catch (NoRouteToHostException nrthe) {
+            System.err.println("No route to host exception occurred");
+        } catch (UnknownHostException uhe) {
+            System.err.println("Unknown host exception occurred");
+        } catch (IOException ioe) {
+            System.err.println("IOException occurred");
+        }
     }
     /**
-     * Method to receive data, WIP
+     * Method to receive data from server.
      */
     public void receiveData() {
-
+        try {
+            dataToReceiveFromServer = (ClackData) inFromServer.readObject();
+        } catch (NoRouteToHostException nrthe) {
+            System.err.println("No route to host exception occurred");
+        } catch (UnknownHostException uhe) {
+            System.err.println("Unknown host exception occurred");
+        } catch (IOException ioe) {
+            System.err.println("IOException occurred");
+        } catch (ClassNotFoundException cnfe) {
+            System.err.println("Class not found exception occurred");
+        }
     }
     /**
      * Method to print data.
@@ -150,6 +215,39 @@ public class ClackClient {
      * Generates unique hashcode of object
      * @return hashCode integer.
      */
+
+    public static void main(String args[]) {
+        try {
+            ClackClient client;
+            if (args.length > 0) { //Catches all non-default construtors
+                final String passed = args[0];
+                if (passed.contains("@")) { //Catches all constructors with hostname
+                    if (passed.contains(":")) { //Catch all constructors with portnumber
+                        final String user = passed.split("@")[0];
+                        final String host = passed.split("@")[1].split(":")[0];
+                        final int port = Integer.parseInt(passed.split(":")[1]);
+                        client = new ClackClient(user, host, port);
+                    } else {
+                        final String user = passed.split("@")[0];
+                        final String host = passed.split("@")[1];
+                        client = new ClackClient(user, host);
+                    }
+                } else {
+                    client = new ClackClient(passed);
+                }
+            } else {
+                client = new ClackClient();
+            }
+            client.start();
+        } catch (NumberFormatException nfe) {
+            System.err.println("Number format exception occurred");
+        }
+    }
+
+    /**
+     * Method to get unique hashcode for each object.
+     * @return Unique hashcode
+     */
     @Override
     public int hashCode() {
         int result = 23;
@@ -166,6 +264,7 @@ public class ClackClient {
     /**
      * Takes object, returns true if its equal to this.
      * @param o Passed object to compare to.
+     * @return Whether the objects are equal
      */
     @Override
     public boolean equals(Object o) {
