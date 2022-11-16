@@ -211,11 +211,6 @@ public class ClackClient {
     public int getPort() {
         return this.port;
     }
-    /**
-     * Generates unique hashcode of object
-     * @return hashCode integer.
-     */
-
     public static void main(String args[]) {
         try {
             ClackClient client;
