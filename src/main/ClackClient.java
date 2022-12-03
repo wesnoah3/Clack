@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.Scanner;
 
 import data.FileClackData;
+import data.ListUsersClackData;
 import data.MessageClackData;
 
 /**
@@ -115,6 +116,9 @@ public class ClackClient {
             Socket socket = new Socket(hostName, port);
             inFromServer = new ObjectInputStream(socket.getInputStream());
             outToServer = new ObjectOutputStream(socket.getOutputStream());
+            ClientSideServerListener clientSideServerListener = new ClientSideServerListener(this);
+            Thread clientSideListenerThread = new Thread(clientSideServerListener);
+            clientSideListenerThread.start();
             this.inFromStd = new Scanner(System.in);
             while (!this.closeConnection) {
                 readClientData();
@@ -136,6 +140,7 @@ public class ClackClient {
         String str = inFromStd.nextLine();
         if (str == "DONE") {
             this.closeConnection = true;
+            dataToSendToServer = new MessageClackData(userName, str, ClackData.CONSTANT_SENDMESSAGE);
         }
         else if (str.contains("SENDFILE")) {
             str.substring(str.indexOf("SENDFILE") + 3, str.length());
@@ -148,7 +153,7 @@ public class ClackClient {
             }
         }
         else if (str == "LISTUSERS") {
-
+            dataToSendToServer = new ListUsersClackData(userName, ClackData.CONSTANT_LISTUSERS);
         }
         else {
             this.dataToSendToServer = new MessageClackData(this.userName, "", ClackData.CONSTANT_SENDMESSAGE);
@@ -210,6 +215,14 @@ public class ClackClient {
      */
     public int getPort() {
         return this.port;
+    }
+
+    /**
+     * Gets close connection.
+     * @return closeConnection
+     */
+    public boolean getCloseConnection() {
+        return closeConnection;
     }
     public static void main(String args[]) {
         try {

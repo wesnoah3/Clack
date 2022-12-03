@@ -5,8 +5,10 @@ import java.util.Objects;
  * Class building off ClackData to store basic user variable and manager their new messages.
  */
 public class MessageClackData extends ClackData {
-
-    private String message;  // A string representing instant message
+    /**
+     * String representing instant message.
+     */
+    private String message;
 
     /**
      * The constructor to set up the instance variables username, message, and type.

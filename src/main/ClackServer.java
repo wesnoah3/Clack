@@ -1,16 +1,15 @@
 package main;
 
 import data.ClackData;
+import data.ListUsersClackData;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.NoRouteToHostException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Objects;
-import data.MessageClackData;
 
 /**
  * Class to store and maintain all relevant ClackServer data.
@@ -29,21 +28,13 @@ public class ClackServer {
      */
     private boolean closeConnection;
     /**
-     * ClackData object representing the data received from the server.
+     * ArrayList of ServerSideClientIO objects.
      */
-    private ClackData dataToReceiveFromClient;
+    private ArrayList<ServerSideClientIO> serverSideClientIOList;
     /**
-     * ClackData object representing the data sent to the client.
+     * List of current users.
      */
-    private ClackData dataToSendToClient;
-    /**
-     * Input stream to receive data packets from the client.
-     */
-    private ObjectInputStream inFromClient = null;
-    /**
-     * Output stream to send data packets to the client.
-     */
-    private ObjectOutputStream outToClient = null;
+    public ListUsersClackData listUsersClackData;
     /**
      * Ctor accepting port.
      * @param port User's port.
@@ -54,8 +45,8 @@ public class ClackServer {
         }
         this.port = port;
         this.closeConnection = false;
-        this.dataToReceiveFromClient = null;
-        this.dataToSendToClient = null;
+        serverSideClientIOList = new ArrayList<ServerSideClientIO>();
+        listUsersClackData = new ListUsersClackData();
     }
     /**
      * Default ctor.
@@ -64,50 +55,21 @@ public class ClackServer {
         this(DEFAULT_PORT);
     }
     /**
-     * Method to start ClackServer, WIP
+     * Method to start ClackServer.
      */
     public void start() {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
-            Socket clientSocket = serverSocket.accept();
+            Socket clientSocket = null;
             while (!closeConnection) {
-                inFromClient = new ObjectInputStream(clientSocket.getInputStream());
-                outToClient = new ObjectOutputStream(clientSocket.getOutputStream());
-                this.sendData();
-                this.receiveData();
+                clientSocket = serverSocket.accept();
+                ServerSideClientIO serverSide = new ServerSideClientIO(this, clientSocket);
+                serverSideClientIOList.add(serverSide);
+                Thread serverSideThread = new Thread(serverSide);
+                serverSideThread.start();
             }
             serverSocket.close();
             clientSocket.close();
-        } catch (NoRouteToHostException nrthe) {
-            System.err.println("No route to host exception occurred");
-        } catch (UnknownHostException uhe) {
-            System.err.println("Unknown host exception occurred");
-        } catch (IOException ioe) {
-            System.err.println("IOException occurred");
-        }
-    }
-    /**
-     * Method to receive data from client.
-     */
-    public void receiveData() {
-        try {
-            dataToReceiveFromClient = (ClackData) inFromClient.readObject();
-        } catch (NoRouteToHostException nrthe) {
-            System.err.println("No route to host exception occurred");
-        } catch (UnknownHostException uhe) {
-            System.err.println("Unknown host exception occurred");
-        } catch (IOException ioe) {
-            System.err.println("IOException occurred");
-        } catch (ClassNotFoundException cnfe) {
-            System.err.println("Class not found exception occurred");
-        }
-    }
-    /**
-     * Method to send data to client.
-     */
-    public void sendData() {
-        try {
-            outToClient.writeObject(dataToSendToClient);
         } catch (NoRouteToHostException nrthe) {
             System.err.println("No route to host exception occurred");
         } catch (UnknownHostException uhe) {
@@ -144,7 +106,7 @@ public class ClackServer {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(this.port, this.closeConnection, this.dataToReceiveFromClient, this.dataToSendToClient);
+        return Objects.hash(this.port, this.closeConnection);
     }
     /**
      * Takes object, returns true if its equal to this.
@@ -163,9 +125,7 @@ public class ClackServer {
         ClackServer otherClackServer = (ClackServer) o;
 
         return this.port == otherClackServer.port
-                && this.closeConnection == otherClackServer.closeConnection
-                && Objects.equals(this.dataToReceiveFromClient, otherClackServer.dataToReceiveFromClient)
-                && Objects.equals(this.dataToSendToClient, otherClackServer.dataToSendToClient);
+                && this.closeConnection == otherClackServer.closeConnection;
     }
     /**
      * Genereates toStringed message including all object data.
@@ -175,8 +135,25 @@ public class ClackServer {
     public String toString() {
         return "This instance of ClackServer has the following properties:\n"
                 + "Port number: " + this.port + "\n"
-                + "Connection status: " + (this.closeConnection ? "Closed" : "Open") + "\n"
-                + "Data to receive from the client: " + this.dataToReceiveFromClient + "\n"
-                + "Data to send to the client: " + this.dataToSendToClient + "\n";
+                + "Connection status: " + (this.closeConnection ? "Closed" : "Open") + "\n";
+    }
+
+    /**
+     * Broadcasts ServerSideClientIO data.
+     * @param dataToBroadcastToClients
+     */
+    public synchronized void broadcast(ClackData dataToBroadcastToClients) {
+        for (ServerSideClientIO client : serverSideClientIOList) {
+            client.setDataToSendToClient(dataToBroadcastToClients);
+            client.sendData();
+        }
+    }
+
+    /**
+     * Helper function to remove specfic ServerSideClientIO object from list.
+     * @param serverSideClientToRemove
+     */
+    public synchronized void remove(ServerSideClientIO serverSideClientToRemove) {
+        serverSideClientIOList.remove(serverSideClientToRemove);
     }
 }

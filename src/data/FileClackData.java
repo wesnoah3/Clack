@@ -8,9 +8,14 @@ import java.util.Objects;
  * Class building off ClackData to store basic user variables and manage their files.
  */
 public class FileClackData extends ClackData {
-
-    private String fileName;  // A string representing the name of a file
-    private String fileContents;  // A string representing the contents of a file
+    /**
+     * String representing the name of the file.
+     */
+    private String fileName;
+    /**
+     * String representing the contents of the file.
+     */
+    private String fileContents;
     /**
      * Ctor accepting userName, fileName, and type.
      * @param userName User's userName.
