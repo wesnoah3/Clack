@@ -5,6 +5,7 @@ import data.ClackData;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.net.NoRouteToHostException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -12,7 +13,6 @@ import java.util.Objects;
 import java.util.Scanner;
 
 import data.FileClackData;
-import data.ListUsersClackData;
 import data.MessageClackData;
 
 /**
@@ -113,24 +113,46 @@ public class ClackClient {
      */
     public void start() {
         try {
-            Socket socket = new Socket(hostName, port);
-            inFromServer = new ObjectInputStream(socket.getInputStream());
-            outToServer = new ObjectOutputStream(socket.getOutputStream());
-            ClientSideServerListener clientSideServerListener = new ClientSideServerListener(this);
-            Thread clientSideListenerThread = new Thread(clientSideServerListener);
-            clientSideListenerThread.start();
             this.inFromStd = new Scanner(System.in);
+            Socket skt = new Socket(this.hostName, this.port);
+
+            // To correctly read and write from the network, the output stream
+            // has to be initialized before the input stream.
+            this.outToServer = new ObjectOutputStream(skt.getOutputStream());
+            this.inFromServer = new ObjectInputStream(skt.getInputStream());
+
             while (!this.closeConnection) {
                 readClientData();
-                this.dataToReceiveFromServer = this.dataToSendToServer;
+                sendData();
+
+                // When DONE, no need to further receive or print the data.
+                if (this.closeConnection) {
+                    break;
+                }
+
+                receiveData();
                 printData();
-                this.readClientData();
-                this.sendData();
             }
-            inFromStd.close();
-            socket.close();
+
+            this.inFromServer.close();
+            this.outToServer.close();
+            skt.close();
+            this.inFromStd.close();
+
+        } catch (UnknownHostException uhe) {
+            System.err.println("UnknownHostException thrown in start(): " + uhe.getMessage());
+
+        } catch (StreamCorruptedException sce) {
+            System.err.println("StreamCorruptedException thrown in start(): " + sce.getMessage());
+
         } catch (IOException ioe) {
-            System.err.println(("IOException occurred"));
+            System.err.println("IOException thrown in start(): " + ioe.getMessage());
+
+        } catch (SecurityException se) {
+            System.err.println("SecurityException thrown in start(): " + se.getMessage());
+
+        } catch (IllegalArgumentException iae) {
+            System.err.println("IllegalArgumentException thrown in start(): " + iae.getMessage());
         }
     }
     /**
@@ -153,7 +175,7 @@ public class ClackClient {
             }
         }
         else if (str == "LISTUSERS") {
-            dataToSendToServer = new ListUsersClackData(userName, ClackData.CONSTANT_LISTUSERS);
+            this.dataToSendToServer = new MessageClackData(this.userName, "", ClackData.CONSTANT_LISTUSERS);
         }
         else {
             this.dataToSendToServer = new MessageClackData(this.userName, "", ClackData.CONSTANT_SENDMESSAGE);

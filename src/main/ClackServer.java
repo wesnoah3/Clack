@@ -1,7 +1,6 @@
 package main;
 
 import data.ClackData;
-import data.ListUsersClackData;
 
 import java.io.IOException;
 import java.net.NoRouteToHostException;
@@ -32,10 +31,6 @@ public class ClackServer {
      */
     private ArrayList<ServerSideClientIO> serverSideClientIOList;
     /**
-     * List of current users.
-     */
-    public ListUsersClackData listUsersClackData;
-    /**
      * Ctor accepting port.
      * @param port User's port.
      */
@@ -46,7 +41,6 @@ public class ClackServer {
         this.port = port;
         this.closeConnection = false;
         serverSideClientIOList = new ArrayList<ServerSideClientIO>();
-        listUsersClackData = new ListUsersClackData();
     }
     /**
      * Default ctor.
@@ -155,5 +149,13 @@ public class ClackServer {
      */
     public synchronized void remove(ServerSideClientIO serverSideClientToRemove) {
         serverSideClientIOList.remove(serverSideClientToRemove);
+    }
+
+    public String getUsers() {
+        String allUsers = "";
+        for (ServerSideClientIO usr : this.serverSideClientIOList) {
+            allUsers += usr.getUsername();
+        }
+        return allUsers;
     }
 }

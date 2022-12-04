@@ -1,14 +1,11 @@
 package main;
 
 import data.ClackData;
-import data.ListUsersClackData;
-import data.MessageClackData;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.NoRouteToHostException;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -65,12 +62,7 @@ public class ServerSideClientIO implements Runnable {
 
             while (!closeConnection) {
                 this.receiveData();
-                if (dataToReceiveFromClient instanceof ListUsersClackData) {
-                    setDataToSendToClient(new MessageClackData("SERVER", this.server.listUsersClackData.getData(), ClackData.CONSTANT_LISTUSERS));
-                    System.out.println(this.server.listUsersClackData.getData());
-                }
-                else {
-                    this.server.listUsersClackData.addUser(dataToReceiveFromClient.getUserName());
+                if (dataToReceiveFromClient.getType() != ClackData.CONSTANT_LISTUSERS) {
                     this.server.broadcast(dataToReceiveFromClient);
                 }
                 this.sendData();
@@ -92,7 +84,7 @@ public class ServerSideClientIO implements Runnable {
             dataToReceiveFromClient = (ClackData) inFromClient.readObject();
             if (dataToReceiveFromClient.getData().equals("DONE")) {
                 closeConnection = true;
-                //server.remove(this);
+                server.remove(this);
             }
         } catch (NoRouteToHostException nrthe) {
             System.err.println("No route to host exception occurred");
@@ -126,5 +118,9 @@ public class ServerSideClientIO implements Runnable {
      */
     public void setDataToSendToClient(ClackData dataToSendToClient) {
         this.dataToSendToClient = dataToSendToClient;
+    }
+
+    public String getUsername() {
+        return this.dataToReceiveFromClient.getUserName();
     }
 }
